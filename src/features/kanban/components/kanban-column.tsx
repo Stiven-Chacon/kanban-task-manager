@@ -2,48 +2,27 @@
 
 import { useState } from "react"
 import { Droppable } from "@hello-pangea/dnd"
-import { PlusCircle, BookOpen } from "lucide-react"
+import { PlusCircle } from "lucide-react"
 import KanbanTask from "@/features/kanban/components/kanban-task"
 import TaskForm from "@/features/kanban/components/task-form"
-import type { Priority } from "@/features/kanban/types"
+import type { Column, Task, Priority } from "@/features/kanban/types"
 
-const mockTasks = [
-  {
-    id: "task-1",
-    title: "Diseñar logo",
-    description: "Crear nuevo logo para el proyecto",
-    priority: "alta" as Priority,
-  },
-  {
-    id: "task-2",
-    title: "Escribir documentación",
-    description: "Documentar el flujo de onboarding",
-    priority: "media" as Priority,
-  },
-]
-
-const mockColumn = {
-  id: "todo",
-  title: "Por hacer",
-  taskIds: ["task-1", "task-2"],
-  icon: BookOpen,
-  color: "text-emerald-500",
+interface KanbanColumnProps {
+  column: Column
+  tasks: Task[]
+  onDeleteTask?: (taskId: string, columnId: string) => void
+  onCreateTask: (columnId: string, title: string, description: string, priority: Priority) => Promise<boolean>
 }
 
-export default function KanbanColumn() {
+export default function KanbanColumn({ column, tasks, onDeleteTask, onCreateTask }: KanbanColumnProps) {
   const [isAddingTask, setIsAddingTask] = useState(false)
-  const [tasks, setTasks] = useState(mockTasks)
-  const Icon = mockColumn.icon
+  const Icon = column.icon
 
-  const handleAddTask = (title: string, description: string, priority: Priority) => {
-    const newTask = {
-      id: `task-${Date.now()}`,
-      title,
-      description,
-      priority,
+  const handleAddTask = async (title: string, description: string, priority: Priority) => {
+    const success = await onCreateTask(column.id, title, description, priority)
+    if (success) {
+      setIsAddingTask(false)
     }
-    setTasks([...tasks, newTask])
-    setIsAddingTask(false)
   }
 
   return (
@@ -51,15 +30,15 @@ export default function KanbanColumn() {
       <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 h-full flex flex-col">
         <div className="p-3 md:p-4 border-b border-slate-200 dark:border-slate-700">
           <div className="flex items-center">
-            <Icon className={`h-4 w-4 md:h-5 md:w-5 mr-2 ${mockColumn.color}`} />
-            <h2 className="font-semibold text-sm md:text-base text-slate-700 dark:text-slate-200">{mockColumn.title}</h2>
+            <Icon className={`h-4 w-4 md:h-5 md:w-5 mr-2 ${column.color}`} />
+            <h2 className="font-semibold text-sm md:text-base text-slate-700 dark:text-slate-200">{column.title}</h2>
             <span className="ml-2 text-xs bg-slate-100 dark:bg-slate-700">
               {tasks.length}
-            </span>
+            </span> 
           </div>
         </div>
 
-        <Droppable droppableId={mockColumn.id}>
+        <Droppable droppableId={column.id}>
           {(provided) => (
             <div
               ref={provided.innerRef}
@@ -71,6 +50,7 @@ export default function KanbanColumn() {
                   key={task.id}
                   task={task}
                   index={index}
+                  onDelete={onDeleteTask ? () => onDeleteTask(task.id, column.id) : undefined}
                 />
               ))}
               {provided.placeholder}
