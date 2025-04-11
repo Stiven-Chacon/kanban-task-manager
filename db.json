@@ -1,0 +1,78 @@
+{
+  "columns": [
+    {
+      "id": "todo",
+      "title": "Por hacer",
+      "taskIds": [
+        "task-2",
+        "task-1",
+        "task-3"
+      ],
+      "icon": "Circle",
+      "color": "text-slate-600"
+    },
+    {
+      "id": "inProgress",
+      "title": "En progreso",
+      "taskIds": [
+        "task-4",
+        "task-5"
+      ],
+      "icon": "Clock",
+      "color": "text-amber-500"
+    },
+    {
+      "id": "done",
+      "title": "Completado",
+      "taskIds": [
+        "task-6"
+      ],
+      "icon": "CheckCircle2",
+      "color": "text-emerald-500"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task-1",
+      "title": "Crear diseño de la página",
+      "description": "Diseñar la interfaz de usuario para la página principal del sitio web, incluyendo la disposición de elementos, esquema de colores y tipografía.",
+      "priority": "alta",
+      "columnId": "todo"
+    },
+    {
+      "id": "task-2",
+      "title": "Implementar autenticación",
+      "description": "Configurar el sistema de autenticación de usuarios con soporte para inicio de sesión con correo electrónico y proveedores sociales como Google y Facebook.",
+      "priority": "media",
+      "columnId": "todo"
+    },
+    {
+      "id": "task-3",
+      "title": "Configurar base de datos",
+      "description": "Crear el esquema de la base de datos y configurar las conexiones necesarias para el almacenamiento de datos de la aplicación.",
+      "priority": "baja",
+      "columnId": "todo"
+    },
+    {
+      "id": "task-4",
+      "title": "Desarrollar API",
+      "description": "Crear los endpoints de la API RESTful para manejar las operaciones CRUD de los recursos principales de la aplicación.",
+      "priority": "alta",
+      "columnId": "inProgress"
+    },
+    {
+      "id": "task-5",
+      "title": "Crear componentes UI",
+      "description": "Desarrollar componentes reutilizables para la interfaz de usuario, como botones, formularios, tarjetas y modales.",
+      "priority": "media",
+      "columnId": "inProgress"
+    },
+    {
+      "id": "task-6",
+      "title": "Configurar CI/CD",
+      "description": "Implementar un pipeline de integración y despliegue continuo para automatizar las pruebas y el despliegue de la aplicación.",
+      "priority": "media",
+      "columnId": "done"
+    }
+  ]
+}
