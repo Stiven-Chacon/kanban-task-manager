@@ -110,6 +110,65 @@ export function useKanbanBoard() {
     }
   }
 
+  // Crear una nueva tarea
+  const handleCreateTask = async (columnId: string, title: string, description: string, priority: Priority) => {
+    try {
+      // Optimistic UI update
+      const tempId = `temp-${Date.now()}`
+      const tempTask = {
+        id: tempId,
+        title,
+        description,
+        priority,
+        columnId,
+      }
+
+      setTasks({
+        ...tasks,
+        [tempId]: tempTask,
+      })
+
+      const column = columns[columnId]
+      setColumns({
+        ...columns,
+        [columnId]: {
+          ...column,
+          taskIds: [...column.taskIds, tempId],
+        },
+      })
+
+      // Actualizar en el servidor
+      const newTask = await KanbanService.createTask(columnId, title, description, priority)
+
+      // Actualizar con los datos reales del servidor
+      setTasks((prevTasks) => {
+        const { [tempId]: _, ...restTasks } = prevTasks
+        return {
+          ...restTasks,
+          [newTask.id]: newTask,
+        }
+      })
+
+      setColumns((prevColumns) => {
+        const column = prevColumns[columnId]
+        const updatedTaskIds = column.taskIds.filter((id) => id !== tempId).concat(newTask.id)
+        return {
+          ...prevColumns,
+          [columnId]: {
+            ...column,
+            taskIds: updatedTaskIds,
+          },
+        }
+      })
+
+      return true
+    } catch (err) {
+      setError("Error al crear la tarea. Por favor, intenta de nuevo.")
+      return false
+    }
+  }
+
+
   return {
     columns,
     tasks,
@@ -117,5 +176,6 @@ export function useKanbanBoard() {
     isLoading,
     error,
     handleDragEnd,
+    handleCreateTask,
   }
 }
