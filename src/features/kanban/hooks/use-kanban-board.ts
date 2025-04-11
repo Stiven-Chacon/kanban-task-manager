@@ -168,6 +168,35 @@ export function useKanbanBoard() {
     }
   }
 
+  // Eliminar una tarea
+  const handleDeleteTask = async (taskId: string, columnId: string) => {
+    try {
+      // Optimistic UI update
+      const column = columns[columnId]
+      const newTaskIds = column.taskIds.filter((id) => id !== taskId)
+
+      setColumns({
+        ...columns,
+        [columnId]: {
+          ...column,
+          taskIds: newTaskIds,
+        },
+      })
+
+      const newTasks = { ...tasks }
+      delete newTasks[taskId]
+      setTasks(newTasks)
+
+      // Actualizar en el servidor
+      await KanbanService.deleteTask(taskId, columnId)
+    } catch (err) {
+      setError("Error al eliminar la tarea. Por favor, intenta de nuevo.")
+      // Recargar datos para asegurar consistencia
+      const data = await KanbanService.getBoard()
+      setColumns(data.columns)
+      setTasks(data.tasks)
+    }
+  }
 
   return {
     columns,
@@ -177,5 +206,6 @@ export function useKanbanBoard() {
     error,
     handleDragEnd,
     handleCreateTask,
+    handleDeleteTask,
   }
 }
