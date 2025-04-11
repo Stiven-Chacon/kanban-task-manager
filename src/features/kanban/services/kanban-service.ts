@@ -153,5 +153,33 @@ export const KanbanService = {
     }
   },
 
- 
+  // Eliminar tarea
+  deleteTask: async (taskId: string, columnId: string): Promise<void> => {
+    try {
+      // Eliminar la tarea
+      await fetch(`${API_URL}/tasks/${taskId}`, {
+        method: "DELETE",
+      })
+
+      // Actualizar la columna para quitar la referencia a la tarea
+      const columnResponse = await fetch(`${API_URL}/columns/${columnId}`)
+      if (!columnResponse.ok) {
+        throw new Error("Error fetching column")
+      }
+
+      const column = await columnResponse.json()
+      const updatedTaskIds = column.taskIds.filter((id: string) => id !== taskId)
+
+      await fetch(`${API_URL}/columns/${columnId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ taskIds: updatedTaskIds }),
+      })
+    } catch (error) {
+      console.error("Error deleting task:", error)
+      throw error
+    }
+  },
 }
