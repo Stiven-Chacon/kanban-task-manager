@@ -42,19 +42,27 @@ git clone https://github.com/tu-usuario/kanban-task-manager.git
 cd kanban-task-manager 
 ```
 ### 2. Instala las dependencias
- - npm install
 
+```bash
+npm install
+```
 
 ### 3. Levanta el backend simulado con json-server
- - npx json-server --watch db.json --port 3001
- - 
+
+```bash
+npx json-server --watch db.json --port 3001
+```
+
 Esto expondrá las siguientes rutas:
   - http://localhost:3001/tasks
   - http://localhost:3001/columns
 
 
 ### 4. Levanta el frontend de React
- - npm run dev
+
+```bash
+npm run dev
+```
 
 
 👨‍💻 Autor
