@@ -2,10 +2,10 @@
   "columns": [
     {
       "id": "todo",
-      "title": "Por hacer",
+      "title": "pendiente",
       "taskIds": [
         "task-2",
-        "task-1",
+        "task-5",
         "task-3"
       ],
       "icon": "Circle",
@@ -16,7 +16,7 @@
       "title": "En progreso",
       "taskIds": [
         "task-4",
-        "task-5"
+        "task-1"
       ],
       "icon": "Clock",
       "color": "text-amber-500"
@@ -37,7 +37,7 @@
       "title": "Crear diseño de la página",
       "description": "Diseñar la interfaz de usuario para la página principal del sitio web, incluyendo la disposición de elementos, esquema de colores y tipografía.",
       "priority": "alta",
-      "columnId": "todo"
+      "columnId": "inProgress"
     },
     {
       "id": "task-2",
@@ -65,7 +65,7 @@
       "title": "Crear componentes UI",
       "description": "Desarrollar componentes reutilizables para la interfaz de usuario, como botones, formularios, tarjetas y modales.",
       "priority": "media",
-      "columnId": "inProgress"
+      "columnId": "todo"
     },
     {
       "id": "task-6",

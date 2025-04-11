@@ -1,3 +1,5 @@
+'use client'
+
 import { useState } from "react"
 import { Circle, Clock, CheckCircle2 } from "lucide-react"
 import type { ColumnMap, TaskMap } from "@/features/kanban/types"
@@ -41,7 +43,7 @@ export function useKanbanData() {
   const [columns, setColumns] = useState<ColumnMap>({
     todo: {
       id: "todo",
-      title: "Por hacer",
+      title: "pendiente",
       taskIds: ["task-1", "task-2", "task-3"],
       icon: Circle,
       color: "text-slate-600",
