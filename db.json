@@ -2,7 +2,7 @@
   "columns": [
     {
       "id": "todo",
-      "title": "pendiente",
+      "title": "Pendiente",
       "taskIds": [
         "task-2",
         "task-5",

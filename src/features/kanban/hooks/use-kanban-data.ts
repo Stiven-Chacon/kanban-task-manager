@@ -43,7 +43,7 @@ export function useKanbanData() {
   const [columns, setColumns] = useState<ColumnMap>({
     todo: {
       id: "todo",
-      title: "pendiente",
+      title: "Pendiente",
       taskIds: ["task-1", "task-2", "task-3"],
       icon: Circle,
       color: "text-slate-600",
