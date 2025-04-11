@@ -41,4 +41,54 @@ export const KanbanService = {
     }
   },
 
+  // Crear una nueva tarea
+  createTask: async (columnId: string, title: string, description: string, priority: Priority): Promise<Task> => {
+    try {
+      const newTask = {
+        id: `task-${Date.now()}`,
+        title,
+        description,
+        priority,
+        columnId,
+      }
+
+      const response = await fetch(`${API_URL}/tasks`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newTask),
+      })
+
+      if (!response.ok) {
+        throw new Error("Error creating task")
+      }
+
+      const task = await response.json()
+
+      // Actualizar la columna para incluir la nueva tarea
+      const columnResponse = await fetch(`${API_URL}/columns/${columnId}`)
+      if (!columnResponse.ok) {
+        throw new Error("Error fetching column")
+      }
+
+      const column = await columnResponse.json()
+      const updatedTaskIds = [...column.taskIds, task.id]
+
+      await fetch(`${API_URL}/columns/${columnId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ taskIds: updatedTaskIds }),
+      })
+
+      return task
+    } catch (error) {
+      console.error("Error creating task:", error)
+      throw error
+    }
+  },
+
+ 
 }
