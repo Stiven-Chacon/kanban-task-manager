@@ -90,5 +90,68 @@ export const KanbanService = {
     }
   },
 
+  // Actualizar posición de tarea
+  updateTaskPosition: async (
+    taskId: string,
+    sourceColumnId: string,
+    destinationColumnId: string,
+    sourceIndex: number,
+    destinationIndex: number,
+  ): Promise<void> => {
+    try {
+      // Obtener columnas de origen y destino
+      const [sourceColumnResponse, destColumnResponse] = await Promise.all([
+        fetch(`${API_URL}/columns/${sourceColumnId}`),
+        fetch(`${API_URL}/columns/${destinationColumnId}`),
+      ])
+
+      if (!sourceColumnResponse.ok || !destColumnResponse.ok) {
+        throw new Error("Error fetching columns")
+      }
+
+      const sourceColumn = await sourceColumnResponse.json()
+      const destColumn = await destColumnResponse.json()
+
+      // Crear nuevos arrays de tareas
+      const sourceTaskIds = [...sourceColumn.taskIds]
+      sourceTaskIds.splice(sourceIndex, 1)
+
+      const destTaskIds = [...destColumn.taskIds]
+      destTaskIds.splice(destinationIndex, 0, taskId)
+
+      // Actualizar columnas
+      await Promise.all([
+        fetch(`${API_URL}/columns/${sourceColumnId}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ taskIds: sourceTaskIds }),
+        }),
+        fetch(`${API_URL}/columns/${destinationColumnId}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ taskIds: destTaskIds }),
+        }),
+      ])
+
+      // Si la tarea se movió a una columna diferente, actualizar su columnId
+      if (sourceColumnId !== destinationColumnId) {
+        await fetch(`${API_URL}/tasks/${taskId}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ columnId: destinationColumnId }),
+        })
+      }
+    } catch (error) {
+      console.error("Error updating task position:", error)
+      throw error
+    }
+  },
+
  
 }
