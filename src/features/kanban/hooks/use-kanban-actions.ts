@@ -56,9 +56,31 @@ export function useKanbanActions(initialColumns: ColumnMap, initialTasks: TaskMa
       },
     })
   }
+
+  const handleDeleteTask = (taskId: string, columnId: string) => {
+    // Crear una copia de los taskIds de la columna sin la tarea eliminada
+    const column = columns[columnId]
+    const newTaskIds = column.taskIds.filter((id) => id !== taskId)
+
+    // Actualizar el estado de las columnas
+    setColumns({
+      ...columns,
+      [columnId]: {
+        ...column,
+        taskIds: newTaskIds,
+      },
+    })
+
+    // Eliminar la tarea del estado de tareas
+    const newTasks = { ...tasks }
+    delete newTasks[taskId]
+    setTasks(newTasks)
+  }
+
   return {
     columns,
     tasks,
     handleDragEnd,
+    handleDeleteTask,
   }
 }
